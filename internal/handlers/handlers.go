@@ -12,6 +12,8 @@ import (
 var URLstore = make(map[string]string)
 
 func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	var u models.URLS
 
 	err := json.NewDecoder(r.Body).Decode(&u)
