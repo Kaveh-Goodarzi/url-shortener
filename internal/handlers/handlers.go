@@ -8,7 +8,7 @@ import (
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/models"
 )
 
-var URLs []models.URLS
+var URLstore []models.URLS
 
 func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 	var u models.URLS
@@ -46,7 +46,7 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u.ID = 1
-	URLs = append(URLs, u)
+	URLstore = append(URLstore, u)
 	w.WriteHeader(http.StatusCreated)
 
 	err = json.NewEncoder(w).Encode(u)
