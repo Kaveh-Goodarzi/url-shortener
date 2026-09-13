@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Kaveh-Goodarzi/url-shortner/internal/helpers"
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/models"
 )
 
-var URLstore []models.URLS
+var URLstore = make(map[string]string)
 
 func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 	var u models.URLS
@@ -46,7 +47,8 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u.ID = 1
-	URLstore = append(URLstore, u)
+	shortCode := helpers.GenerateShortCode()
+	URLstore[shortCode] = u.URL
 	w.WriteHeader(http.StatusCreated)
 
 	err = json.NewEncoder(w).Encode(u)
