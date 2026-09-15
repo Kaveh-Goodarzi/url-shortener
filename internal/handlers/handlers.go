@@ -48,7 +48,7 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.ID = 1
+	u.ID = helpers.IDGenerator()
 	shortCode := helpers.GenerateShortCode()
 	URLstore[shortCode] = u.URL
 	u.ShortCode = shortCode
