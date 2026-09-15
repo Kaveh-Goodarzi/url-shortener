@@ -51,6 +51,7 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 	u.ID = 1
 	shortCode := helpers.GenerateShortCode()
 	URLstore[shortCode] = u.URL
+	u.ShortCode = shortCode
 	w.WriteHeader(http.StatusCreated)
 
 	err = json.NewEncoder(w).Encode(u)
