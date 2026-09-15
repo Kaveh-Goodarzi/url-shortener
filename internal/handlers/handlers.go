@@ -60,3 +60,19 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func RedirectURLHandler(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+	if code == "" {
+		http.Error(w, "invalid parameter", http.StatusBadRequest)
+		return
+	}
+
+	originalUrl, exists := URLstore[code]
+	if !exists {
+		http.Error(w, "URL not found", http.StatusNotFound)
+		return
+	}
+
+	http.Redirect(w, r, originalUrl, http.StatusFound)
+}
