@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Kaveh-Goodarzi/url-shortner/internal/database"
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/helpers"
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/models"
 )
-
-var URLstore = make(map[string]string)
 
 func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -50,7 +49,8 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	u.ID = helpers.IDGenerator()
 	shortCode := helpers.GenerateShortCode()
-	URLstore[shortCode] = u.URL
+
+	database.URLstore[shortCode] = u.URL
 	u.ShortCode = shortCode
 	w.WriteHeader(http.StatusCreated)
 
@@ -68,7 +68,7 @@ func RedirectURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	originalUrl, exists := URLstore[code]
+	originalUrl, exists := database.URLstore[code]
 	if !exists {
 		http.Error(w, "URL not found", http.StatusNotFound)
 		return
