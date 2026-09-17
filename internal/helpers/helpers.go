@@ -3,6 +3,9 @@ package helpers
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
+
+	"github.com/Kaveh-Goodarzi/url-shortner/internal/database"
 )
 
 func GenerateShortCode() string {
@@ -24,4 +27,12 @@ func IDGenerator() int {
 	ID++
 	proccess++
 	return ID
+}
+
+func CheckDuplicateShortCode(shortCode string) error {
+	if _, exists := database.URLstore[shortCode]; exists {
+		return errors.New("short code already exists")
+	}
+
+	return nil
 }

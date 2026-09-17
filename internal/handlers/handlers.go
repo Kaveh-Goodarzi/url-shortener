@@ -49,7 +49,10 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	u.ID = helpers.IDGenerator()
 	shortCode := helpers.GenerateShortCode()
-
+	err = helpers.CheckDuplicateShortCode(shortCode)
+	if err != nil {
+		shortCode = helpers.GenerateShortCode()
+	}
 	database.URLstore[shortCode] = u.URL
 	u.ShortCode = shortCode
 	w.WriteHeader(http.StatusCreated)
