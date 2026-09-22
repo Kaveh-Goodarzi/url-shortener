@@ -25,3 +25,11 @@ The initial structure is as follows:
         short_code VARCHAR(6) NOT NULL UNIQUE
     )
 ```
+
+---
+
+# Database Driver
+
+The pgx driver was selected. Factors influencing this decision included its superior speed compared to competitors, more frequent updates, support for new PostgreSQL features, and its connection pooling capabilities.
+
+---
