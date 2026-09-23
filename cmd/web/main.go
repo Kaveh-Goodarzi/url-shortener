@@ -22,6 +22,10 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
+	if err := conn.Ping(context.Background()); err != nil {
+		log.Fatal("database connection failed")
+	}
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /urls", handlers.CreateURLHandler)
