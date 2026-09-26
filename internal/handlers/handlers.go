@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/url"
 
-	"github.com/Kaveh-Goodarzi/url-shortner/internal/database"
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/helpers"
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/models"
 )
@@ -47,14 +47,19 @@ func CreateURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.ID = helpers.IDGenerator()
 	shortCode := helpers.GenerateShortCode()
 	err = helpers.CheckDuplicateShortCode(shortCode)
 	if err != nil {
 		shortCode = helpers.GenerateShortCode()
 	}
-	database.URLstore[shortCode] = u.URL
 	u.ShortCode = shortCode
+
+	err = helpers.Create(&u)
+	if err != nil {
+		http.Error(w, "creating new url object failed", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 
 	err = json.NewEncoder(w).Encode(u)
@@ -71,11 +76,15 @@ func RedirectURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	originalUrl, exists := database.URLstore[code]
-	if !exists {
-		http.Error(w, "URL not found", http.StatusNotFound)
+	url, err := helpers.GetByShortCode(code)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "URL not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, "server error", http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, originalUrl, http.StatusFound)
+	http.Redirect(w, r, url.URL, http.StatusFound)
 }

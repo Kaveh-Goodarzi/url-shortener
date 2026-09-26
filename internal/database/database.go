@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/config"
-	_ "github.com/jackc/pgx/v5"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 var URLstore = make(map[string]string)
@@ -26,5 +26,5 @@ func InitDB() {
 	if err := DB.Ping(); err != nil {
 		log.Fatal("database connection failed")
 	}
-	defer DB.Close()
+	// defer DB.Close()
 }
