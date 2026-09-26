@@ -7,9 +7,11 @@ import (
 
 func Create(url *models.URLS) error {
 	query := `INSERT INTO urlstore (name, url, short_code)
-		VALUES ($1, $2, $3);`
+		VALUES ($1, $2, $3)
+		RETURNING id;`
 
-	_, err := database.DB.Exec(query, &url.Name, &url.URL, &url.ShortCode)
+	row := database.DB.QueryRow(query, &url.Name, &url.URL, &url.ShortCode)
+	err := row.Scan(&url.ID)
 	if err != nil {
 		return err
 	}
