@@ -4,10 +4,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Kaveh-Goodarzi/url-shortner/internal/database"
 	"github.com/Kaveh-Goodarzi/url-shortner/internal/handlers"
 )
 
 func main() {
+	database.InitDB()
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /urls", handlers.CreateURLHandler)
