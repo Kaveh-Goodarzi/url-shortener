@@ -30,3 +30,28 @@ func GetByShortCode(shortCode string) (models.URLS, error) {
 
 	return url, nil
 }
+
+func GetAll() ([]models.URLS, error) {
+	query := `SELECT * FROM urlstore;`
+
+	var urls []models.URLS
+
+	rows, err := database.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var url models.URLS
+
+		err := rows.Scan(&url.ID, &url.Name, &url.URL, &url.ShortCode)
+		if err != nil {
+			return nil, err
+		}
+
+		urls = append(urls, url)
+	}
+
+	return urls, nil
+}

@@ -14,6 +14,7 @@ func main() {
 
 	mux.HandleFunc("POST /urls", handlers.CreateURLHandler)
 	mux.HandleFunc("GET /{code}", handlers.RedirectURLHandler)
+	mux.HandleFunc("GET /urls", handlers.GetURLSHandler)
 
 	log.Println("starting server on localhost:8080")
 	err := http.ListenAndServe(":8080", mux)

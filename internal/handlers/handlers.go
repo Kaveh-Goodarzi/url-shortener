@@ -88,3 +88,24 @@ func RedirectURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, url.URL, http.StatusFound)
 }
+
+func GetURLSHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	urls, err := helpers.GetAll()
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "no url found", http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(&urls)
+	if err != nil {
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+}
