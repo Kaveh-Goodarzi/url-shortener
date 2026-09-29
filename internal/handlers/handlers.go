@@ -105,7 +105,7 @@ func GetURLSHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = json.NewEncoder(w).Encode(&urls)
 	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
+		http.Error(w, "error while encoding content", http.StatusInternalServerError)
 		return
 	}
 }
