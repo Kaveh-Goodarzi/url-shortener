@@ -128,3 +128,28 @@ func DeleteURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("url deleted succesfully\n"))
 }
+
+func GetURLHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	code := r.PathValue("code")
+	if code == "" {
+		http.Error(w, "invalid parameter", http.StatusBadRequest)
+		return
+	}
+
+	url, err := helpers.GetByShortCode(code)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "URL not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(&url)
+	if err != nil {
+		http.Error(w, "error while encoding content", http.StatusInternalServerError)
+		return
+	}
+}

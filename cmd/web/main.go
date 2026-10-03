@@ -15,6 +15,7 @@ func main() {
 	mux.HandleFunc("POST /urls", handlers.CreateURLHandler)
 	mux.HandleFunc("GET /{code}", handlers.RedirectURLHandler)
 	mux.HandleFunc("GET /urls", handlers.GetURLSHandler)
+	mux.HandleFunc("GET /urls/{code}", handlers.GetURLHandler)
 	mux.HandleFunc("DELETE /urls/{code}", handlers.DeleteURLHandler)
 
 	log.Println("starting server on localhost:8080")
