@@ -55,3 +55,14 @@ func GetAll() ([]models.URLS, error) {
 
 	return urls, nil
 }
+
+func DeleteURL(shortCode string) error {
+	query := `DELETE FROM urlstore WHERE short_code = $1;`
+
+	_, err := database.DB.Exec(query, shortCode)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

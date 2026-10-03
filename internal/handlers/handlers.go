@@ -109,3 +109,22 @@ func GetURLSHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func DeleteURLHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	code := r.PathValue("code")
+
+	err := helpers.DeleteURL(code)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "url not found", http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Write([]byte("url deleted succesfully\n"))
+}
